@@ -12,12 +12,24 @@ public class HttpServerMain {
         final int PUERTO = 8000;
         HttpServer httpd = HttpServer.create(new InetSocketAddress(PUERTO), 0);
         HttpContext context = httpd.createContext("/");
+        HttpContext api = httpd.createContext("/api");
         context.setHandler(HttpServerMain::handleRequest);
+        api.setHandler(HttpServerMain::handleRequestApi);
         httpd.start();
     }
         private static void handleRequest(HttpExchange exchange) throws IOException {
             final int COD_RESPONSE = 200;
-            String content = "GO del server ;)";
+            String content = "Msg from the fucking server ;)";
+
+        exchange.sendResponseHeaders(COD_RESPONSE, content.getBytes().length);
+            OutputStream os = exchange.getResponseBody();
+            os.write(content.getBytes());
+            os.close();
+        }
+
+        private static void handleRequestApi(HttpExchange exchange ) throws IOException {
+            final int COD_RESPONSE = 200;
+            String content = "Msg from de api :D";
 
         exchange.sendResponseHeaders(COD_RESPONSE, content.getBytes().length);
             OutputStream os = exchange.getResponseBody();
